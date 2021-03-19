@@ -68,7 +68,8 @@ App = {
         $(document).on('click', '#setAllowance', App.handleSetAllowance);
         $(document).on('click', '#closeAllowance', App.handleCloseAllowance);
         $(document).on('click', '#TaskAdd', App.handleAddTask);
-        $(document).on('click', '#getTaskIdentifier', App.handleIdGetTask);
+        // $(document).on('click', '#getPrice', App.handleGetPrice);
+        $(document).on('click', '#getTaskIdentifier', App.handleGetTask);
     },
 
     // 设置预言机
@@ -110,81 +111,30 @@ App = {
         var rewardToken = $('#token').val();
         var rewardAmount = $('#amount').val();
         var rewardRatio = $('#ratio').val();
-        //抵押挖矿
+
         App.requestView.addTask(priceType,dataSource,period,rewardToken,rewardAmount,rewardRatio,{from: App.account}).then(function () {
             // location.reload();
         });
     },
 
-    // 通过id查任务
-    handleIdGetTask: function () {
+    // //获取价格
+    // handleGetPrice: function() {
+    //
+    //     var priceType = $('#getType').val();
+    //     var dataSource = $('#getSource').val();
+    //     console.log(priceType);
+    //     console.log(dataSource);
+    //
+    //     App.requestView.getPrice(priceType,dataSource).then(function (data) {
+    //         console.log(data[0]);
+    //         $('#getValue').html(data[0].toString());
+    //     });
+    // },
 
+    // 查询任务
+    handleGetTask: function () {
 
         var totalNum = 9;
-        // var Identifier = "";
-
-        // for (var i=0; i<10; i++){
-        //     App.requestView.getTaskIdentifier(i).then(function (data){
-        //         var priceType = data[0];
-        //         var dataSource = data[1];
-        //         $('#type').html(priceType);
-        //         App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
-        //             $('#amountReward').html(amount.toString());
-        //         });
-        //         c
-        //         App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
-        //             $('#tokenReward').html(rewardToken);
-        //         });
-        //         App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
-        //             $('#ratioReward').html(rewardRatio.toString());
-        //         });
-        //     });
-        // };
-
-        // App.requestView.getTaskIdentifier(inNum).then(function (data){
-        //     all.push(data);
-        //     while (data != null) {
-        //         var priceType = data[0];
-        //         var dataSource = data[1];
-        //         $('#type').html(priceType);
-        //         App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
-        //             $('#amountReward').html(amount.toString());
-        //         });
-        //         App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
-        //             $('#tokenReward').html(rewardToken);
-        //         });
-        //         App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
-        //             $('#ratioReward').html(rewardRatio.toString());
-        //         });
-        //         inNum = inNum + 1;
-        //         console.log(inNum);
-        //
-        //         App.requestView.getTaskIdentifier(inNum).then(function (data){
-        //             Identifier = data.toString();
-        //             all.push(Identifier);
-        //             console.log(all);
-        //         });
-        //     }
-        // });
-
-
-        // App.requestView.getTaskIdentifier(inNum).then(function (data) {
-        //     console.log(data);
-        //     var Identifier = data.toString();
-        //     var departPoint = Identifier.indexOf(",");
-        //     var priceType = data.toString().substr(0,departPoint);
-        //     var dataSource = data.toString().substr(departPoint+1,data.toString().length-departPoint);
-        //     $('#type').html(priceType);
-        //     App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
-        //         $('#amountReward').html(amount.toString());
-        //     });
-        //     App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
-        //         $('#tokenReward').html(rewardToken);
-        //     });
-        //     App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
-        //         $('#ratioReward').html(rewardRatio.toString());
-        //     });
-        // });
 
         var arr = new Array();
         for (var i = 0; i < totalNum; i++) {
@@ -193,23 +143,48 @@ App = {
                     data['index'] = innerNum;
                     arr.push(data);
                 });
-                // console.log(i, arr);
             })(i)
         }
-        // var temp = App.requestView.getTaskIdentifier(inNum).then(function (data) {
-        //     arr.push(data);
-        // });
+
         let handler = setInterval(function () {
             if (arr.length == totalNum) {
                 clearInterval(handler)
                 arr.sort(function (a, b) { return a.index - b.index;})
-                App.doSomething(arr);
+                App.getPriceData(arr);
             }
         }, 1000)
     },
-    doSomething: function (arr) {
+
+    getPriceData: function (arr) {
         // 最终需要的结果
         console.log(arr);
+        var arrTemp = new Array();
+        var identifierArr = [];
+        for (var i = 0; i < arr.length; i++) {
+            (function (innerNum) {
+                var priceType = arr[innerNum][0];
+                var dataSource = arr[innerNum][1];
+
+                var amountGet = 0;
+                var rewardTokenGet = "";
+                var rewardRationGet = 0;
+
+                App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
+                    amountGet = amount;
+                });
+                App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
+                    rewardTokenGet = rewardToken;
+                });
+                App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
+                    rewardRationGet = rewardRatio;
+                });
+
+                identifierArr.push('<div><span>' + priceType + '</span>在OKEx上的价格：' + '奖励金额：' + amountGet + '奖励代币：' + rewardTokenGet + '分配比例：' + rewardRationGet + '</div>')
+
+            })(i)
+        }
+        $('#tasksView').html(identifierArr.join(''));
+
     }
 };
 
@@ -223,3 +198,7 @@ $(function() {
         App.init();
     });
 });
+
+// $(function () {
+//     var
+// })

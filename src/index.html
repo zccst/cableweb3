@@ -82,14 +82,32 @@
         </div>
     </div>
 
+<!--    <div class="row">-->
+<!--        <div class="col-xs-12 col-sm-8 col-sm-push-2">-->
+<!--            <p class="text-warning">获取价格。 </p>-->
+<!--            <p class="text-danger">需要权限</p>-->
+<!--            <p>-->
+<!--                资产授权：-->
+<!--                <input type="text" id="getType" placeholder="代币类型">-->
+<!--                <input type="text" id="getSource" placeholder="数据源">-->
+
+<!--                <button id="getPrice" class="btn btn-primary" style="margin-left: 20px;">查询</button>-->
+<!--            </p>-->
+<!--            <p>最新价格： <span id="getValue" style="color: black;"></span></p>-->
+<!--            <hr>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
             <p>
-                <input type="text" id="typeView" placeholder="币对类型">
-                <input type="text" id="sourceView" placeholder="数据源">
+                查询已发布的任务：
+                <button id="getTaskIdentifier" class="btn btn-primary" style="margin-left: 250px;">查询</button>
             </p>
-            <button id="getTaskRewardAmount" class="btn btn-primary" style="margin-left: 20px;">查询</button>
+            <p>请求<span id="type" style="color: red;"></span>基于OKEx的喂价</p>
+            <p>奖励金额： <span id="amountReward" style="color: #000000;"></span></p>
+            <p>奖励代币地址： <span id="tokenReward" style="color: black;"></span></p>
+            <p>奖励比例： <span id="ratioReward" style="color: black;"></span></p>
             <hr>
         </div>
     </div>
@@ -97,14 +115,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
             <p>
-                <input type="text" id="num" placeholder="任务ID">
-            </p>
-            <button id="getTaskIdentifier" class="btn btn-primary" style="margin-left: 20px;">查询</button>
-
-            <p><span id="type" style="color: red;"></span>在OKEx上的价格</p>
-            <p>奖励金额： <span id="amountReward" style="color: #000000;"></span></p>
-            <p>奖励代币地址： <span id="tokenReward" style="color: black;"></span></p>
-            <p>奖励比例： <span id="ratioReward" style="color: black;"></span></p>
+            <p>Tasks： <span id="tasksView" style="color: black;"></span></p>
             <hr>
         </div>
     </div>
