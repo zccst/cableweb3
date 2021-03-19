@@ -120,7 +120,7 @@ App = {
     handleIdGetTask: function () {
 
 
-        var inNum = 0;
+        var totalNum = 9;
         // var Identifier = "";
 
         // for (var i=0; i<10; i++){
@@ -187,12 +187,30 @@ App = {
         // });
 
         var arr = new Array();
-        var temp = App.requestView.getTaskIdentifier(inNum).then(function (data) {
-            arr.push(data);
-        });
-        console.log(temp);
-        console.log(arr);
+        for (var i = 0; i < totalNum; i++) {
+            (function (innerNum) {
+                App.requestView.getTaskIdentifier(innerNum).then(function (data) {
+                    data['index'] = innerNum;
+                    arr.push(data);
+                });
+                // console.log(i, arr);
+            })(i)
+        }
+        // var temp = App.requestView.getTaskIdentifier(inNum).then(function (data) {
+        //     arr.push(data);
+        // });
+        let handler = setInterval(function () {
+            if (arr.length == totalNum) {
+                clearInterval(handler)
+                App.doSomething(arr);
+            }
+        }, 1000)
     },
+    doSomething: function (arr) {
+        arr.sort(function (a, b) { return a.index - b.index;})
+        // 最终需要的结果
+        console.log(arr);
+    }
 };
 
 $(function() {
