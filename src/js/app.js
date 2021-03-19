@@ -202,12 +202,12 @@ App = {
         let handler = setInterval(function () {
             if (arr.length == totalNum) {
                 clearInterval(handler)
+                arr.sort(function (a, b) { return a.index - b.index;})
                 App.doSomething(arr);
             }
         }, 1000)
     },
     doSomething: function (arr) {
-        arr.sort(function (a, b) { return a.index - b.index;})
         // 最终需要的结果
         console.log(arr);
     }
