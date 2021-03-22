@@ -142,6 +142,27 @@ App = {
                 App.requestView.getTaskIdentifier(innerNum).then(function (data) {
                     data['index'] = innerNum;
                     arr.push(data);
+                    var priceType = data[0];
+                    var dataSource = data[1];
+                    let innerHandler = setInterval(function () {
+                        if ($('#tasksView').html()) {
+                            App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
+                                console.log(innerNum, priceType, dataSource, 'amount', amount)
+                                $(".tasklist-" + innerNum).find(".amount").html(amount.toString() / 1000000);
+                            });
+                            App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
+                                console.log(innerNum, priceType, dataSource, 'rewardToken', rewardToken)
+                                $(".tasklist-" + innerNum).find(".rewardToken").html(rewardToken);
+                            });
+                            App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
+                                console.log(innerNum, priceType, dataSource, 'rewardRatio', rewardRatio)
+                                $(".tasklist-" + innerNum).find(".rewardRatio").html(rewardRatio.toString() / 1000000);
+                            });
+                            clearInterval(innerHandler)
+                        }
+                    }, 1000)
+
+
                 });
             })(i)
         }
@@ -161,27 +182,27 @@ App = {
         var arrTemp = new Array();
         var identifierArr = [];
         for (var i = 0; i < arr.length; i++) {
-            (function (innerNum) {
-                var priceType = arr[innerNum][0];
-                var dataSource = arr[innerNum][1];
+            identifierArr.push('<div style="margin-bottom: 4px;" class="tasklist-' + i + '"><span>'+ arr[i][0] +'</span>在OKEx上的价格，奖励金额：<span class="amount"></span>，奖励代币：<span class="rewardToken"></span>，分配比例：<span class="rewardRatio"></span><br/></div>');
 
-                var amountGet = 0;
-                var rewardTokenGet = "";
-                var rewardRationGet = 0;
-
-                App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
-                    amountGet = amount;
-                });
-                App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
-                    rewardTokenGet = rewardToken;
-                });
-                App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
-                    rewardRationGet = rewardRatio;
-                });
-
-                identifierArr.push('<div><span>' + priceType + '</span>在OKEx上的价格：' + '奖励金额：' + amountGet + '奖励代币：' + rewardTokenGet + '分配比例：' + rewardRationGet + '</div>')
-
-            })(i)
+            // (function (innerNum) {
+            //     var priceType = arr[innerNum][0];
+            //     var dataSource = arr[innerNum][1];
+            //
+            //     var amountGet = 0;
+            //     var rewardTokenGet = "";
+            //     var rewardRationGet = 0;
+            //
+            //     App.requestView.getTaskRewardAmount(priceType,dataSource).then(function (amount) {
+            //         amountGet = amount;
+            //     });
+            //     App.requestView.getTaskRewardToken(priceType,dataSource).then(function (rewardToken) {
+            //         rewardTokenGet = rewardToken;
+            //     });
+            //     App.requestView.getTaskRewardRatio(priceType,dataSource).then(function (rewardRatio) {
+            //         rewardRationGet = rewardRatio;
+            //     });
+            //     identifierArr.push('<div><span>' + priceType + '</span>在OKEx上的价格：' + '，奖励金额：' + amountGet + '，奖励代币：' + rewardTokenGet + '，分配比例：' + rewardRationGet + '</div>')
+            // })(i)
         }
         $('#tasksView').html(identifierArr.join(''));
 
